@@ -1,0 +1,16 @@
+name: ip2region_plus
+description: Ip2region_plus is a offline IP address manager framework and locator, support billions of data segments, ten microsecond searching performance. 
+version: 1.0.0
+repository: https://github.com/sumsg/ip2region_plus
+homepage: https://github.com/sumsg/ip2region_plus
+issue_tracker:  https://github.com/sumsg/ip2region_plus/issues
+environment:
+  sdk: ^3.1.1
+
+# Add regular dependencies here.
+dependencies:
+  # path: ^1.8.0
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
