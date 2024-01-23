@@ -1,3 +1,5 @@
+[![pub package](https://img.shields.io/pub/v/ip2region_plus.svg)](https://pub.dev/packages/ip2region_plus)
+
 # Ip2region_plus
 
 ip2region_plus - is a `dart` language implementation. It can be used in dart or flutter。

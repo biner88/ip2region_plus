@@ -1,6 +1,6 @@
 name: ip2region_plus
 description: Ip2region_plus is a offline IP address manager framework and locator, support billions of data segments, ten microsecond searching performance. 
-version: 1.0.1
+version: 1.0.2
 repository: https://github.com/biner88/ip2region_plus
 homepage: https://github.com/biner88/ip2region_plus
 issue_tracker:  https://github.com/biner88/ip2region_plus/issues

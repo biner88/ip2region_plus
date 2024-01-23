@@ -1,3 +1,5 @@
+[![pub package](https://img.shields.io/pub/v/ip2region_plus.svg)](https://pub.dev/packages/ip2region_plus)
+
 # Ip2region_plus
 
 ip2region_plus - 是 `dart` 语言的实现。可以在 dart 或 flutter 下使用。
