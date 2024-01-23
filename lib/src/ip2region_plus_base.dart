@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+///ip2region xdb dart
 class IP2RegionPlus {
   static const int _headerInfoLength = 256;
   static const int _vectorIndexRows = 256;
@@ -15,6 +16,7 @@ class IP2RegionPlus {
   Uint8List? vectorIndex;
   Uint8List? contentBuff;
 
+  ///xdb,vectorIndex,Buff
   IP2RegionPlus(String dbFile, Uint8List? vectorIndex, Uint8List? cBuff) {
     if (cBuff != null) {
       this.vectorIndex = null;
@@ -28,6 +30,7 @@ class IP2RegionPlus {
     }
   }
 
+  ///Search
   Map<String, dynamic> search(dynamic ip) {
     final startTime = DateTime.now().microsecondsSinceEpoch;
     if (ip is String) {
@@ -141,6 +144,7 @@ class IP2RegionPlus {
     return b[idx] | (b[idx + 1] << 8);
   }
 
+  ///File-based querying
   static Uint8List? loadContentFromFile(String dbFile) {
     File file = File(dbFile);
     if (!file.existsSync()) {
@@ -149,6 +153,7 @@ class IP2RegionPlus {
     return file.readAsBytesSync();
   }
 
+  ///Cache VectorIndex index
   static List<int> loadVectorIndex(RandomAccessFile handle1) {
     handle1.setPositionSync(_headerInfoLength);
     int len = _vectorIndexRows * _vectorIndexCols * _segmentIndexSize;
@@ -160,6 +165,7 @@ class IP2RegionPlus {
     return buff;
   }
 
+  ///Cache the entire xdb data
   static List<int> loadVectorIndexFromFile(String dbPath) {
     final handle1 = File(dbPath).openSync(mode: FileMode.read);
     final vIndex = loadVectorIndex(handle1);
@@ -167,10 +173,45 @@ class IP2RegionPlus {
     return vIndex;
   }
 
+  /// ```dart
+  /// import 'package:ip2region_plus/ip2region_plus.dart';
+  /// void main() {
+  ///   String dbFile = "ip2region.xdb";
+  ///   IP2RegionPlus searcher;
+  ///   try {
+  ///     searcher = IP2RegionPlus.newWithFileOnly(dbFile);
+  ///     Map region = searcher.search('8.8.8.8');
+  ///     print(region);
+  ///   } catch (e) {
+  ///     print("failed to create searcher with '$dbFile': $e");
+  ///     return;
+  ///   }
+  /// }
+  /// ```
   static IP2RegionPlus newWithFileOnly(String dbFile) {
     return IP2RegionPlus(dbFile, null, null);
   }
 
+  /// ```dart
+  /// import 'package:ip2region_plus/ip2region_plus.dart';
+  /// void main() {
+  ///   String dbFile = "ip2region.xdb";
+  ///   IP2RegionPlus searcher;
+  ///   var cBuff = IP2RegionPlus.loadContentFromFile(dbFile);
+  ///   if (cBuff == null) {
+  ///     print("failed to load content buffer from $dbFile");
+  ///     return;
+  ///   }
+  ///   try {
+  ///     searcher = IP2RegionPlus.newWithBuffer(cBuff);
+  ///     Map region = searcher.search('8.8.8.132');
+  ///     print(region);
+  ///   } catch (e) {
+  ///     print(e);
+  ///     return;
+  ///   }
+  /// }
+  /// ```
   static newWithBuffer(cBuff) {
     if (cBuff.isEmpty) {
       throw Exception('buffer is invalid');
@@ -178,6 +219,22 @@ class IP2RegionPlus {
     return IP2RegionPlus('', null, cBuff);
   }
 
+  /// ```dart
+  /// import 'package:ip2region_plus/ip2region_plus.dart';
+  /// void main() {
+  ///   String dbFile = "ip2region.xdb";
+  ///   IP2RegionPlus searcher;
+  ///   try {
+  ///     var vIndex = IP2RegionPlus.loadVectorIndexFromFile(dbFile);
+  ///     searcher = IP2RegionPlus.newWithVectorIndex(dbFile, vIndex);
+  ///     Map region = searcher.search('8.8.8.132');
+  ///     print(region);
+  ///   } catch (e) {
+  ///     print("failed to create searcher with '$dbFile': $e");
+  ///     return;
+  ///   }
+  /// }
+  /// ```
   static newWithVectorIndex(String dbPath, List<int> vectorIndex) {
     if (vectorIndex.isEmpty) {
       throw Exception('vectorIndex is invalid');
